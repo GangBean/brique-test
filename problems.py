@@ -2,6 +2,9 @@ import requests
 import gdown
 import os
 import numpy as np
+import pandas as pd
+import mysql.connector
+from mysql.connector import Error
 
 def problem_1(file_url='https://drive.google.com/uc?id=1Ah0gkauGCIqJHpFGhTgsEZCjYFRscjTh', filename='sample.csv'):
     print("# problem 1")
@@ -39,7 +42,63 @@ def problem_2():
 
 def problem_3():
     print("# problem 3")
-    pass
+    try:
+        connection = mysql.connector.connect(
+            host= 'codingtest.brique.kr',
+            user= 'codingtest',
+            password= '12brique!@',
+            database= 'employees',
+        )
+
+        if connection.is_connected():
+            print("Successfully connected to MariaDB")
+
+            # 커서를 생성하고 SQL 쿼리를 실행할 수 있습니다.
+            cursor = connection.cursor()
+            sql: str = """
+               SELECT e.emp_no
+                    , e.first_name
+                    , e.last_name
+                    , e.gender
+                    , e.hire_date
+                    , d.dept_name
+                    , t.title
+                    , ms.max_salary
+                    # , s.from_date
+                    # , s.to_date
+                    # , t.from_date
+                    # , t.to_date
+                FROM employees e
+                JOIN salaries s ON s.emp_no = e.emp_no
+                JOIN (SELECT emp_no
+                        , MAX(salary) AS max_salary 
+                        FROM salaries 
+                       GROUP BY emp_no) ms 
+                  ON s.emp_no = ms.emp_no 
+                 AND s.salary = ms.max_salary
+                JOIN dept_emp de ON de.emp_no = e.emp_no
+                JOIN departments d ON d.dept_no = de.dept_no
+                JOIN titles t ON t.emp_no = e.emp_no
+                 AND t.from_date <= s.from_date
+                 AND t.to_date >= s.to_date
+               WHERE DATE_FORMAT(e.hire_date, '%Y') >= '2000'
+               ORDER BY e.emp_no
+            ;
+            """
+            cursor.execute(sql)
+            results = cursor.fetchall()
+
+            columns = [desc[0] for desc in cursor.description]
+            df = pd.DataFrame(results, columns=columns)
+            print(df.to_string(index=False))
+
+    except Error as e:
+        print(f"데이터 베이스 처리 중 오류가 발생했습니다: {e}")
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            print("Connection closed")
 
 def problem_4():
     print("# problem 4")
