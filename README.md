@@ -50,3 +50,11 @@ Please input your option command:
 
 Especially in option #2, two prompts are needed. One for client and the other for server. Please make sure select correct command options for each prompts.
 After select option, follow the instructions follow.
+
+# How to confirm Dependencies
+All dependencies required for this project are listed in the **poetry.lock** file. You can also view them via the command line using the following command:
+(Run this command in the project's root directory)
+```
+poetry show (--tree)
+```
+__--tree__ is option for visualizing dependencies via tree form.
