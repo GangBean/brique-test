@@ -113,8 +113,8 @@ def problem_5(num=100, url='http://codingtest.brique.kr:8080/random'):
     sorted_map = dict(sorted(map.items(), key=lambda item: item[1], reverse=True))
     total_count = 0
     for text, count in sorted_map.items():
-            print(f"count: {count} {text}")
-            total_count += count
+        print(f"count: {count} {text}")
+        total_count += count
     assert(total_count == num)
     print(f"\nTotal count: {total_count}")
 
@@ -124,8 +124,8 @@ def problem_6():
     tops = [int(top) for top in tops]
     answer = []
     for i in range(len(tops)):
-            l = [left+1 for left in range(i) if tops[left] > tops[i]]
-            answer.append(str(max(l)) if len(l) > 0 else '0')
+        l = [left+1 for left in range(i) if tops[left] > tops[i]]
+        answer.append(str(max(l)) if len(l) > 0 else '0')
     print(' '.join(answer))
 
 def problem_7():
