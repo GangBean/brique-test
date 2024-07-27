@@ -30,7 +30,10 @@ def run():
 [e] 종료""")
         option: str = input()
         if option in OPTIONS:
-            OPTIONS[option]()
+            try:
+                OPTIONS[option]()
+            except Exception as e:
+                print(f"예외가 발생했습니다. 다시 시도해주세요: {e}")
         elif option == 'e':
             print("종료합니다.")
             break
