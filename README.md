@@ -30,9 +30,22 @@ This command installs the dependencies listed in the **pyproject.toml** file and
 ## 4. Run application via poetry
 After install dependencies, run project through given poetry virtual environment:
 ```
-poetry run python run.py
+poetry run python3.11 run.py
 ```
 
 ## 5. Input option command
 Please input your option command:
+```
+# 원하는 명령어를 입력하세요.
+[1] 문제 1
+[2] 문제 2
+[3] 문제 3
+[4] 문제 4
+[5] 문제 5
+[6] 문제 6
+[7] 문제 7
+[8] 문제 8
+[e] 종료
+```
 
+after select option, follow the instructions follow.
