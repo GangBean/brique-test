@@ -15,7 +15,7 @@ Poetry is a tool for managing Python project dependencies and virtual environmen
 
 To install Poetry, you can use the following command:
 ```
-curl -sSL https://install.python-poetry.org | python3 -
+pip3.11 install poetry
 ```
 
 ## 3. Initiating Poetry Virtual Environment
@@ -48,4 +48,5 @@ Please input your option command:
 [e] 종료
 ```
 
-after select option, follow the instructions follow.
+Especially in option #2, two prompts are needed. One for client and the other for server. Please make sure select correct command options for each prompts.
+After select option, follow the instructions follow.
