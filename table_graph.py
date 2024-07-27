@@ -1,9 +1,7 @@
 # Example default data
 import tkinter as tk
-from tkinter import ttk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import matplotlib.ticker as ticker
 
 class TableGraph:
     def __init__(self, root):
