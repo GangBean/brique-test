@@ -1,7 +1,9 @@
+from typing import Any, Coroutine
 import requests
 import gdown
 import os
 import numpy as np
+import asyncio
 import pandas as pd
 import mysql.connector
 from mysql.connector import Error
@@ -29,16 +31,76 @@ def problem_1(file_url='https://drive.google.com/uc?id=1Ah0gkauGCIqJHpFGhTgsEZCj
     for line in file.readlines():
         calculated_lines += calculate(line, error_values)
         total_number_of_lines += 1
-        
+
     print(f"""---------------------------------------------
 The total number of lines: {total_number_of_lines}
 The calculated lines: {calculated_lines}
 The error values: {error_values} / {len(error_values)} 개
 """)
 
-def problem_2():
-    print("# problem 2")
-    pass
+def problem_2(host: str = '127.0.0.1', port: int = 56768):
+    async def handle_client(
+        reader: asyncio.StreamReader,
+        writer: asyncio.StreamWriter,
+    ) -> Coroutine:
+        request_number = 0
+
+        while True:
+            data = await reader.read(100)
+            if not data:
+                break
+
+            request_number += 1
+            message = data.decode().strip()
+            print(f"Received({request_number}): {message}")
+
+            await asyncio.sleep(3)  # 응답 전 3초 대기
+
+            if message == "Ping":
+                response = f"Pong ({request_number})"
+            else:
+                response = f"{message} ({request_number})"
+
+            print(f"Send: {response}")
+            writer.write(response.encode())
+            await writer.drain()
+
+        # print("Closing the connection.")
+        writer.close()
+        await writer.wait_closed()
+    
+    async def tcp_client(message: str, number: int) -> Coroutine:
+        reader, writer = await asyncio.open_connection(host, port)
+        print(f"Send({number}): {message}")
+        writer.write(message.encode())
+        await writer.drain()
+
+        data = await reader.read(100)
+        print(f"Received: {data.decode()}")
+
+        writer.close()
+        await writer.wait_closed()
+    
+    print("# problem 2: enter to select among client[c] or server[s]")
+    option: str = input().lower()
+    if option in ('s', 'server'):
+        async def main() -> Coroutine:
+            server: Coroutine[Any, Any, asyncio.Server] = await asyncio.start_server(handle_client, host, port)
+            print(f'Connected by ({host}, {port})')
+
+            async with server:
+                await server.serve_forever()
+    elif option in ('c', 'client'):
+        async def main() -> Coroutine:
+            number: int = 0
+            while True:
+                message: str = input()
+                number += 1
+                await asyncio.create_task(tcp_client(message, number))
+    else:
+        raise ValueError
+    
+    asyncio.run(main())
 
 def problem_3():
     print("# problem 3")
