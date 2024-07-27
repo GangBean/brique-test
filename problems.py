@@ -7,6 +7,9 @@ import asyncio
 import pandas as pd
 import mysql.connector
 from mysql.connector import Error
+import tkinter as tk
+
+from table_graph import TableGraph
 
 def problem_1(file_url='https://drive.google.com/uc?id=1Ah0gkauGCIqJHpFGhTgsEZCjYFRscjTh', filename='sample.csv'):
     print("# problem 1")
@@ -162,7 +165,9 @@ def problem_3():
 
 def problem_4():
     print("# problem 4")
-    pass
+    root = tk.Tk()
+    app = TableGraph(root)
+    root.mainloop()
 
 def problem_5(num=100, url='http://codingtest.brique.kr:8080/random'):
     print("# problem 5: please wait for output...")
