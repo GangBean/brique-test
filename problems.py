@@ -43,23 +43,21 @@ def problem_2(host: str = '127.0.0.1', port: int = 56768):
         reader: asyncio.StreamReader,
         writer: asyncio.StreamWriter,
     ) -> Coroutine:
-        request_number = 0
 
         while True:
             data = await reader.read(100)
             if not data:
                 break
 
-            request_number += 1
-            message = data.decode().strip()
-            print(f"Received({request_number}): {message}")
+            message, number = data.decode().strip().split(",")
+            print(f"Received({number}): {message}")
 
             await asyncio.sleep(3)  # 응답 전 3초 대기
 
             if message == "Ping":
-                response = f"Pong ({request_number})"
+                response = f"Pong ({number})"
             else:
-                response = f"{message} ({request_number})"
+                response = f"{message} ({number})"
 
             print(f"Send: {response}")
             writer.write(response.encode())
@@ -72,7 +70,7 @@ def problem_2(host: str = '127.0.0.1', port: int = 56768):
     async def tcp_client(message: str, number: int) -> Coroutine:
         reader, writer = await asyncio.open_connection(host, port)
         print(f"Send({number}): {message}")
-        writer.write(message.encode())
+        writer.write(f"{message},{number}".encode())
         await writer.drain()
 
         data = await reader.read(100)
